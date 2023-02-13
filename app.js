@@ -19,10 +19,10 @@ app.use(errorHandler)
 
 
 //Routers
-const productsRouter = require('./routes/products')
-const orderRouter = require('./routes/orders')
 const categoryRouter = require('./routes/category')
+const productsRouter = require('./routes/products')
 const usersRouter = require('./routes/user');
+const orderRouter = require('./routes/orders')
 
 
 const api = process.env.API_URL

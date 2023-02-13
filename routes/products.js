@@ -155,7 +155,7 @@ router.put('/:id', uploadOptions.single('image'), async (req, res) => {
     }
 
     const product = await Product.findById(req.params.id)
-    if (product) return res.status(400).send('Invalid product!')
+    if (!product) return res.status(400).send('Invalid product!')
 
     const file = req.file
     let imagesPath
@@ -168,23 +168,25 @@ router.put('/:id', uploadOptions.single('image'), async (req, res) => {
         imagesPath = product.image;
     }
 
-    const updatedProduct = await Category.findByIdAndUpdate(
+    const updatedProduct = await Product.findByIdAndUpdate(
         req.params.id,
         {
             name: req.body.name,
-            image: req.body.image,
+            description: req.body.description,
+            richDescription: req.body.richDescription,
+            image: imagesPath,
             brand: req.body.brand,
             price: req.body.price,
             category: req.body.category,
             countInStock: req.body.countInStock,
             rating: req.body.rating,
             numReviews: req.body.numReviews,
-            isFeatured: req.body.isFeatured,
+            isFeatured: req.body.isFeatured
         },
         { new: true }
     )
     if (!updatedProduct)
-        return res.status(200).send('the product cannot be updated')
+        return res.status(500).send('the product cannot be updated')
 
     res.send(updatedProduct)
 

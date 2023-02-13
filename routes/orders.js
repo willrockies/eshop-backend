@@ -1,8 +1,9 @@
 const { Order } = require('../models/order')
 const express = require('express')
 const { OrderItem } = require('../models/order-Item')
-const { Category } = require('../models/category')
+const { Product } = require('../models/product')
 const router = express.Router()
+const stripe = require ('stripe')('sk_test_51MZl2fDjDn78nwlPH2Zr9JVMsU4VcHI5kCPCtRep7SH4oZudzYXKQaxQfOI0IO8057EJm8K800Jyq1baZ10KmXlz00AMwzhqKt')
 
 router.get('/', async (req, res) => {
     const orderList = await Order.find()
@@ -119,6 +120,40 @@ router.post('/', async (req, res) => {
     res.send(order);
 })
 
+router.post('/create-checkout-session', async(req,res) => {
+    const orderItems = req.body;
+
+    if(!orderItems){
+        return res.status(400).send('checkout session cannot be created - check the order items')
+    }
+
+    const lineItems = await Promise.all(
+        orderItems.map(async (orderItem) => {
+            const product = await Product.findById(orderItem.product)
+
+            return {
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: product.name,
+                    },
+                    unit_amount: product.price * 100
+                },
+                quantity: orderItem.quantity
+            }
+        })
+    );
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: 'http://localhost:4200/success',
+        cancel_url: 'http://localhost:4200/error',
+    })
+
+    res.json({id: session.id})
+
+})
 
 router.put('/:id', async (req, res) => {
     const order = await Order.findByIdAndUpdate(
@@ -129,9 +164,9 @@ router.put('/:id', async (req, res) => {
         { new: true }
     )
     if (!order) {
-        return res.status(400).send('order not found')
+        return res.status(400).send('the order cannot be update!')
     }
-    res.send('the order was updated')
+    res.send(order)
 
 })
 
