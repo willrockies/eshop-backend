@@ -35,7 +35,7 @@ app.use(`${api}/users`, usersRouter)
 mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: 'eshop-database'
+    dbName: process.env.DB_NAME
 })
     .then(() => {
         console.log('Database Connection is ready...')
@@ -44,7 +44,10 @@ mongoose.connect(process.env.CONNECTION_STRING, {
         console.log(err);
     })
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+// Server
+
+app.listen(PORT, () => {
     console.log(api);
     console.log('Server is running !!');
 })

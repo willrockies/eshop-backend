@@ -133,7 +133,7 @@ router.post('/create-checkout-session', async(req,res) => {
 
             return {
                 price_data: {
-                    currency: 'usd',
+                    currency: 'brl',
                     product_data: {
                         name: product.name,
                     },
