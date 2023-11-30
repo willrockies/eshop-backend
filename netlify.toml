@@ -1,0 +1,9 @@
+[build]
+  command = "node app.js"
+  publish = "/"  
+
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+  force = true
