@@ -1,9 +1,5 @@
 [build]
   command = "npm start"
-  publish = ""  
+  publish = "/"  
 
-[[redirects]]
-  from = "/api/*"
-  to = "/api/:splat"
-  status = 200
-  force = true
+
