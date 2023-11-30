@@ -1,6 +1,6 @@
 [build]
-  command = "node app.js"
-  publish = "/"  
+  command = "npm start"
+  publish = ""  
 
 [[redirects]]
   from = "/api/*"
